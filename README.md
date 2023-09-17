@@ -1,3 +1,16 @@
+### Architecture
+
+This project is to experiment to develop distributed application with Go. The primary object of the project is to use 
+use API gateway to perform all the different plumbing such as - routing, security, JSON processing, etc.
+
+The project will use few cool technologies to solve distributed issues such as async communicataion, service resolution,
+caching and many more.
+
+The project uses [KrakenD project](https://github.com/krakend/krakend-ce)
+
+![architecture](docs/architecture.png)
+
+
 ### Installing and Running
 
 * Register in https://comicvine.gamespot.com/api/ to register and get an API key.
