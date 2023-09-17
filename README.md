@@ -1,12 +1,25 @@
+### Project Objective
+
+"This project serves as an exploration into developing distributed applications using the Go programming language. 
+Another objective is to make use of system tools written in Go to make it easy to maintain, as we will utilize a single 
+programming language. The primary objective of this endeavor is to harness the power of an API gateway to handle 
+various aspects of infrastructure - routing, security, others."
+
+Throughout the project, several cutting-edge technologies will be employed to address distributed computing challenges, 
+such as asynchronous communication, service resolution, caching, and more.
+
+The codebase places a strong emphasis on executing essential functions, while the complex work of managing 
+infrastructure is delegated to the API gateway. The application's purpose revolves around processing data from 
+Comicvine, storing it in a database, and implementing caching mechanisms to bolster performance. 
+There remains a substantial amount of work to be done in order to fully demonstrate the capabilities of the gateway, 
+in conjunction with the use of Dapr, a valuable auxiliary tool. Furthermore, the integration of 
+[Dapr](https://github.com/dapr/dapr) will streamline the deployment of the application across various cloud providers,
+offering a host of additional advantages.
+
+It's worth noting that this project leverages the [KrakenD project](https://github.com/krakend/krakend-ce) 
+for its endeavors.
+
 ### Architecture
-
-This project is to experiment to develop distributed application with Go. The primary object of the project is to use 
-use API gateway to perform all the different plumbing such as - routing, security, JSON processing, etc.
-
-The project will use few cool technologies to solve distributed issues such as async communicataion, service resolution,
-caching and many more.
-
-The project uses [KrakenD project](https://github.com/krakend/krakend-ce)
 
 ![architecture](docs/architecture.png)
 
