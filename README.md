@@ -57,3 +57,12 @@ The endpoint `/comic` is exposed by the KrakenD gateway, which can be accessed u
 ```
 curl http://localhost:8080/comic |  jq . 
 ```
+
+### TODO
+
+* Decide on what DB to use
+* Build DB handler for data storage
+* Add telemetry and logging
+* Deploy to cloud
+* Build API:
+  * Get movie and character

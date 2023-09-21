@@ -2,52 +2,57 @@ package character
 
 import (
 	"errors"
-	"fmt"
 	"project/github/comics/client"
 	"project/github/comics/client/async"
 	"project/github/comics/client/contract"
-	character "project/github/comics/client/json/character"
+	"project/github/comics/client/json/character"
 	"project/github/comics/client/json/common"
 	http "project/github/comics/client/sync"
-
 	"strconv"
 )
 
 type Character struct {
 	common.CommonStruct
+	arr character.CharacterArray
+}
+
+func (c Character) Len() int {
+	return len(c.arr)
 }
 
 func (c Character) GetDataType() common.DataType {
 	return character.Character
 }
+func (c Character) Get(idx int) *character.MainType {
+	return c.arr[idx]
+}
 
-func (c Character) GetData() (*character.MainType, error) {
+func (c *Character) GetData(apiUrl string) error {
 	var dataType *character.MainType
-	var totalRecords = 3
 
 	var err error
 	var cType *character.MainType
 
-	for i := 0; i < totalRecords; i++ {
-		mapQuery := map[string]string{
-			"format": "json",
-			"limit":  strconv.Itoa(c.Limit),
-			"offset": strconv.Itoa(c.Offset),
-		}
-
-		cType, err = getData(c, mapQuery, dataType)
-
-		if cType != nil {
-			async.SendToMQ(character.Character, cType)
-			c.Offset = c.Offset + cType.NumberOfPageResults
-			fmt.Println("Next offset = ", c.Offset)
-		}
+	mapQuery := map[string]string{
+		"format": "json",
+		"limit":  strconv.Itoa(c.Limit),
 	}
-	return cType, err
+
+	cType, err = getData(*c, mapQuery, dataType, apiUrl)
+
+	if cType != nil {
+		responseData := &character.CharacterResponseData{
+			DataType: character.Character,
+			RawData:  cType,
+		}
+		async.SendToMQ(responseData)
+		c.arr[0] = cType
+	}
+	return err
 }
 
-func getData(c Character, queryMap map[string]string, resultType *character.MainType) (*character.MainType, error) {
-	resp := http.Call(c.CommonStruct, queryMap, resultType, "characters")
+func getData(c Character, queryMap map[string]string, resultType *character.MainType, url string) (*character.MainType, error) {
+	resp := http.CallSingle(c.CommonStruct, queryMap, resultType, url)
 
 	if resp == nil {
 		return nil, errors.New("Error getting data")
@@ -60,12 +65,13 @@ func getData(c Character, queryMap map[string]string, resultType *character.Main
 	return nil, nil
 }
 
-func New(apikey string) contract.InformationCaller[*character.MainType] {
-	c := Character{
+func New(apikey string) contract.InformationCaller[character.MainType, character.MainType] {
+	c := &Character{
 		CommonStruct: common.CommonStruct{
 			Offset: 0,
-			Limit:  10,
+			Limit:  1,
 		},
+		arr: make(character.CharacterArray, 1),
 	}
 	c.Client = client.CreateClient(apikey)
 	return c

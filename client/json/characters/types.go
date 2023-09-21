@@ -1,12 +1,12 @@
-package character
+package characters
 
 import "project/github/comics/client/json/common"
 
-const Character common.DataType = "Character"
+const Characters common.DataType = "Characters"
 
-type CharacterArray []*MainType
+type CharactersArray []MainType
 
-type CharacterResponseData struct {
+type CharactersResponseData struct {
 	DataType common.DataType `json:"datatype"`
 	RawData  *MainType       `json:"rawdata"`
 }

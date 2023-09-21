@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"github.com/streadway/amqp"
 	"log"
-	"project/github/comics/client/json/character"
-	"project/github/comics/client/json/common"
 	"time"
 )
 
@@ -77,12 +75,7 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func SendToMQ(dataType common.DataType, message *character.MainType) {
-	responseData := &character.CharacterResponseData{
-		DataType: dataType,
-		RawData:  message,
-	}
-
+func SendToMQ(responseData any) {
 	jsonData, err := json.Marshal(responseData)
 	if err != nil {
 		log.Println("Error converting data - ", err)
