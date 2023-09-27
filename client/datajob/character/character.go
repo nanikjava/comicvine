@@ -43,9 +43,9 @@ func (c *Character) GetData(apiUrl string) error {
 	if cType != nil {
 		responseData := &character.CharacterResponseData{
 			DataType: character.Character,
-			RawData:  cType,
+			Data:     &cType.Results,
 		}
-		async.SendToMQ(responseData)
+		async.SendToMQ(responseData, "character-exchange")
 		c.arr[0] = cType
 	}
 	return err

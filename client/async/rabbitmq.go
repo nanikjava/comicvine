@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func sendMQ(msg []byte) error {
+func sendMQ(msg []byte, exchange string) error {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -20,9 +20,9 @@ func sendMQ(msg []byte) error {
 	defer cancel()
 
 	err = ch.Publish(
-		"producer-q-exchange",
-		// this should be the empty if using async/aqmp
-		"1",
+		//"producer-q-exchange",
+		exchange,
+		"",
 		false,
 		false,
 		amqp.Publishing{
@@ -31,6 +31,7 @@ func sendMQ(msg []byte) error {
 		})
 
 	failOnError(err, "Failed to publish a message")
+	conn.Close()
 	return err
 }
 
@@ -75,14 +76,14 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func SendToMQ(responseData any) {
+func SendToMQ(responseData any, exchange string) {
 	jsonData, err := json.Marshal(responseData)
 	if err != nil {
 		log.Println("Error converting data - ", err)
 		return
 	}
 
-	err = sendMQ(jsonData)
+	err = sendMQ(jsonData, exchange)
 	if err != nil {
 		log.Println("Error sending data to mq - ", err)
 	}

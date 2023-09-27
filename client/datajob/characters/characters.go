@@ -46,11 +46,14 @@ func (c *Characters) GetData(urlString string) error {
 		cType, err = getData(*c, mapQuery, dataType)
 
 		if cType != nil {
-			responseData := &characters.CharactersResponseData{
-				DataType: characters.Characters,
-				RawData:  cType,
+			for _, result := range cType.Results {
+				responseData := &characters.CharactersResponseData{
+					DataType: characters.Characters,
+					Data:     &result,
+				}
+				async.SendToMQ(responseData, "characters-exchange")
 			}
-			async.SendToMQ(responseData)
+
 			c.Offset = c.Offset + cType.NumberOfPageResults
 			fmt.Println("Next offset = ", c.Offset)
 

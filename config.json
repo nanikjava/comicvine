@@ -1,0 +1,5 @@
+{
+  "dburl" : "mongodb://localhost:27017/",
+  "token" : "",
+  "dbname": "comic"
+}

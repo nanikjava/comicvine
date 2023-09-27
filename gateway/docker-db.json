@@ -1,0 +1,108 @@
+{
+  "$schema": "https://www.krakend.io/schema/v3.json",
+  "version": 3,
+  "timeout": "10s",
+  "cache_ttl": "300ms",
+  "output_encoding": "json",
+  "name": "projectc",
+  "port": 8080,
+  "echo_endpoint": true,
+  "endpoints": [
+    {
+      "endpoint": "/characters",
+      "method": "POST",
+      "timeout": "100s",
+      "backend": [
+        {
+          "host": [ "http://host.docker.internal:8888" ],
+          "url_pattern": "/db/characters"
+        }
+      ]
+    },
+    {
+      "endpoint": "/character",
+      "method": "POST",
+      "timeout": "100s",
+      "backend": [
+        {
+          "host": [ "http://host.docker.internal:8888" ],
+          "url_pattern": "/db/character"
+        }
+      ]
+    }
+  ],
+  "async_agent": [
+    {
+      "name": "characters-agent",
+      "connection": {
+        "max_retries": 2,
+        "backoff_strategy": "exponential-jitter",
+        "health_interval": "1s"
+      },
+      "consumer": {
+        "workers": 10,
+        "timeout": "25s",
+        "max_rate": 50
+      },
+      "backend": [
+        {
+          "method": "POST",
+          "encoding": "json",
+          "host": [
+            "http://127.0.0.1:8080"
+          ],
+          "url_pattern": "/characters"
+        }
+      ],
+      "extra_config": {
+        "async/amqp": {
+          "name": "characters-json",
+          "host": "amqp://guest:guest@rabbitmq:5672/",
+          "exchange": "characters-exchange",
+          "durable": true,
+          "delete": false,
+          "exclusive": false,
+          "no_wait": true,
+          "prefetch_count": 1,
+          "auto_ack": true
+        }
+      }
+    },
+    {
+      "name": "character-agent",
+      "connection": {
+        "max_retries": 2,
+        "backoff_strategy": "exponential-jitter",
+        "health_interval": "1s"
+      },
+      "consumer": {
+        "workers": 10,
+        "timeout": "25s",
+        "max_rate": 50
+      },
+      "backend": [
+        {
+          "method": "POST",
+          "encoding": "json",
+          "host": [
+            "http://127.0.0.1:8080"
+          ],
+          "url_pattern": "/character"
+        }
+      ],
+      "extra_config": {
+        "async/amqp": {
+          "name": "character-json",
+          "host": "amqp://guest:guest@rabbitmq:5672/",
+          "exchange": "character-exchange",
+          "durable": true,
+          "delete": false,
+          "exclusive": false,
+          "no_wait": true,
+          "prefetch_count": 1,
+          "auto_ack": true
+        }
+      }
+    }
+  ]
+}

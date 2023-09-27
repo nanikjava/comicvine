@@ -26,6 +26,9 @@ for its endeavors.
 
 ### Installing and Running
 
+#### Individual Services
+
+
 * Register in https://comicvine.gamespot.com/api/ to register and get an API key.
 
 * Run rabbitmq
@@ -37,7 +40,7 @@ docker run -p 5672:5672 -p 15672:15672 datamanipulation/rabbitmq:3.11-management
 * Run krakend-ce from inside `comics` directory:
 
 ```
-krakend run -d -c gateway/comic.json
+krakend run -d -c gateway/db.json
 ```
 
 * Run `main.go`
@@ -49,14 +52,25 @@ go run main.go -token=<comicvine_token>
 The parameter `-token` contains the Comicview API key. The application will run in a loop 3 times, each time will obtain 
 10 records, with the records pushed to the RabbitMQ queue - `producer-q-exchange`.
 
+#### Docker Compose
 
-### Accessing endpoint
-
-The endpoint `/comic` is exposed by the KrakenD gateway, which can be accessed using cURL:
+Use the following command to run all the different services together using docker-compose:
 
 ```
-curl http://localhost:8080/comic |  jq . 
+docker compose -f ./docker-compose.yml up
 ```
+
+#### Sample App
+
+The sample app `main.go` is the main application that will communincate with ComicVine and download
+all the different data and send it off to RabbitMQ which is running as `async_agent` in KrakenD.
+
+The `async_agent` will pick up the data from RabbitMQ and forward it to another endpoint which is running
+as Gin router inside the `main.go`. Currently 2 `POST` endpoints are available
+
+* `/db/characters`
+* `/db/character`
+
 
 ### TODO
 

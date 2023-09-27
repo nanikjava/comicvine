@@ -8,5 +8,5 @@ type CharactersArray []MainType
 
 type CharactersResponseData struct {
 	DataType common.DataType `json:"datatype"`
-	RawData  *MainType       `json:"rawdata"`
+	Data     *Results        `json:"data"`
 }
