@@ -2,8 +2,8 @@ package mongo
 
 import (
 	"context"
-	"project/github/comics/client/models"
-	"project/github/comics/client/utils"
+	"project/github/comics/dbhandler/models"
+	"project/github/comics/utils"
 )
 
 func (m *Mongo) Create(ctx context.Context, col string, req *models.CreateRequest) (int64, error) {

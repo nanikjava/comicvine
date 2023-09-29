@@ -9,8 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"project/github/comics/client/models"
-	"project/github/comics/client/utils"
+	"project/github/comics/dbhandler/models"
+	"project/github/comics/utils"
 	"strings"
 	"time"
 )

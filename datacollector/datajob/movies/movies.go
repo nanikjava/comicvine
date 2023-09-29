@@ -80,6 +80,6 @@ func New(apikey string) contract.InformationCaller[movies.MainType, movies.MainT
 			Limit:  10,
 		},
 	}
-	c.Client = client.CreateClient(apikey)
+	c.Client = client.New(apikey)
 	return c
 }

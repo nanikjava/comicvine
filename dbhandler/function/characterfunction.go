@@ -7,9 +7,9 @@ import (
 	characters "github.com/nanikjava/comicstype/json/characters"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
-	"project/github/comics/client/models"
-	"project/github/comics/client/utils"
+	"project/github/comics/dbhandler/models"
 	"project/github/comics/dbhandler/mongo"
+	"project/github/comics/utils"
 	"reflect"
 )
 
