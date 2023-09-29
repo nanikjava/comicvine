@@ -22,8 +22,7 @@ func CharactersFunction(m *mongo.Mongo, coltype string, body []byte) error {
 		return err
 	}
 
-	//func (m *Mongo) Read(ctx context.Context, col string, req *models.ReadRequest) (int64, interface{}, map[string]map[string]string, *models.SQLMetaData, error) {
-	_, intface, _, _, err := m.Read(context.Background(),
+	_, intface, _, _, _ := m.Read(context.Background(),
 		coltype,
 		&models.ReadRequest{
 			Find: map[string]interface{}{
@@ -34,7 +33,6 @@ func CharactersFunction(m *mongo.Mongo, coltype string, body []byte) error {
 		},
 	)
 
-	// convert into struct
 	if intface != nil {
 		jsonData, err := json.Marshal(intface)
 		if err != nil {
@@ -50,17 +48,13 @@ func CharactersFunction(m *mongo.Mongo, coltype string, body []byte) error {
 
 		if isEqual {
 			fmt.Println("The structs are equal.")
-		} else {
-			fmt.Println("The structs are not equal.")
+			return nil
 		}
 	}
-	//
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
 
+	fmt.Println("Storing data")
 	var bsonDocument bson.M
-	err = bson.UnmarshalExtJSON(body, false, &bsonDocument)
+	err := bson.UnmarshalExtJSON(body, false, &bsonDocument)
 	if err != nil {
 		return err
 	}
