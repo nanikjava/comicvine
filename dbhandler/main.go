@@ -1,18 +1,16 @@
 package main
 
 import (
-	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"project/github/comics/client/models"
-	"project/github/comics/client/utils"
-	"project/github/comics/dbhandler/dbconfig"
+	"project/github/comics/dbhandler/config"
+	"project/github/comics/dbhandler/function"
 	"project/github/comics/dbhandler/mongo"
 )
 
@@ -22,8 +20,8 @@ var typeFunMapping map[string]typeFunction
 
 func init() {
 	typeFunMapping = make(map[string]typeFunction)
-	typeFunMapping["characters"] = charactersFunction
-	typeFunMapping["character"] = charactersFunction
+	typeFunMapping["characters"] = function.CharactersFunction
+	typeFunMapping["character"] = function.CharactersFunction
 }
 func main() {
 	var configFile string
@@ -36,7 +34,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err, cfg := dbconfig.ParseConfig(configFile)
+	err, cfg := config.ParseConfig(configFile)
 
 	if err != nil {
 		log.Println("Error parsing configuration file. Exiting.")
@@ -66,8 +64,25 @@ func scheduleDBHandler(m *mongo.Mongo) {
 			return
 		}
 
+		type MyData struct {
+			Datatype string          `json:"datatype"`
+			Data     json.RawMessage `json:"data"`
+		}
+
+		// extract 'data' portion
+		var myData MyData
+		if err := json.Unmarshal(body, &myData); err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		dataJSON, err := json.Marshal(myData.Data)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+
 		f := typeFunMapping[colType]
-		err = f(m, colType, body)
+		err = f(m, colType, dataJSON)
 
 		if err != nil {
 			log.Println("Error inserting data ", err)
@@ -83,20 +98,4 @@ func scheduleDBHandler(m *mongo.Mongo) {
 	})
 
 	r.Run(":8888")
-}
-
-func charactersFunction(m *mongo.Mongo, coltype string, body []byte) error {
-	var bsonDocument bson.M
-	err := bson.UnmarshalExtJSON(body, false, &bsonDocument)
-	if err != nil {
-		return err
-	}
-
-	_, err = m.Create(context.Background(), coltype, &models.CreateRequest{
-		Document:  bsonDocument,
-		Operation: utils.One,
-		IsBatch:   false,
-	})
-
-	return err
 }

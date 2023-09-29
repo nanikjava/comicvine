@@ -1,3 +1,4 @@
 local.config.json
 datacollector/local.config.json
 dbhandler/local.config.json
+mongodb_data/

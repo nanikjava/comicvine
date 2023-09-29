@@ -1,4 +1,4 @@
-package dbconfig
+package config
 
 import (
 	"fmt"
@@ -6,15 +6,15 @@ import (
 	"github.com/gookit/config/v2/json"
 )
 
-type ComicAppConfig struct {
+type DBAppConfig struct {
 	DbURL  string `config:"dburl"`
 	DBName string `config:"dbname"`
 }
 
-func ParseConfig(c string) (error, *ComicAppConfig) {
+func ParseConfig(c string) (error, *DBAppConfig) {
 	config.AddDriver(json.Driver)
 
-	comicConfig := &ComicAppConfig{}
+	comicConfig := &DBAppConfig{}
 
 	err := config.LoadFiles(c)
 	if err != nil {

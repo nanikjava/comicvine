@@ -2,13 +2,11 @@ package main
 
 import (
 	"flag"
-	"github.com/go-co-op/gocron"
 	"log"
 	"os"
 	"project/github/comics/datacollector/configuration"
 	"project/github/comics/datacollector/datajob/character"
 	"project/github/comics/datacollector/datajob/characters"
-	"time"
 )
 
 func main() {
@@ -33,13 +31,17 @@ func main() {
 }
 
 func scheduleTask(tokenFlag string) {
-	s := gocron.NewScheduler(time.UTC)
-	_, err := s.Cron("*/1 * * * *").Do(func() { getCharacters(tokenFlag) }) // every minute
-
-	if err != nil {
-		log.Fatalf("Error scheduling")
-	}
-	s.StartBlocking()
+	//	s := gocron.NewScheduler(time.UTC)
+	//	_, err := s.Cron("*/1 * * * *").Do(func() { getCharacters(tokenFlag) }) // every minute
+	//
+	//	if err != nil {
+	//		log.Fatalf("Error scheduling")
+	//	}
+	//	s.StartImmediately()
+	//	for {
+	//
+	//	}
+	getCharacters(tokenFlag)
 }
 
 func getCharacters(tokenFlag string) {
