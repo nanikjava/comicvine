@@ -3,10 +3,10 @@ package character
 import (
 	"errors"
 	"github.com/nanikjava/comicstype/contract"
+	client "github.com/nanikjava/comicstype/http"
 	"github.com/nanikjava/comicstype/json/character"
 	"github.com/nanikjava/comicstype/json/common"
 	"project/github/comics/async"
-	"project/github/comics/client"
 	"strconv"
 )
 
@@ -51,7 +51,7 @@ func (c *Character) GetData(apiUrl string) error {
 }
 
 func getData(c Character, queryMap map[string]string, resultType *character.MainType, url string) (*character.MainType, error) {
-	resp := client.CallSingle(c.CommonStruct, queryMap, resultType, url)
+	resp := c.HttpClient.CallSingle(queryMap, resultType, url)
 
 	if resp == nil {
 		return nil, errors.New("Error getting data")
@@ -69,9 +69,9 @@ func New(apikey string) contract.InformationCaller[character.MainType, character
 		CommonStruct: common.CommonStruct{
 			Offset: 0,
 			Limit:  1,
-			Client: client.New(apikey),
 		},
 		arr: make(character.CharacterArray, 1),
 	}
+	c.HttpClient = client.New(apikey)
 	return c
 }

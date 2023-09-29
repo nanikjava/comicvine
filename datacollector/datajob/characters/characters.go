@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/nanikjava/comicstype/contract"
+	client "github.com/nanikjava/comicstype/http"
 	"github.com/nanikjava/comicstype/json/characters"
 	"github.com/nanikjava/comicstype/json/common"
 	"project/github/comics/async"
-	"project/github/comics/client"
 
 	"strconv"
 )
@@ -63,7 +63,7 @@ func (c *Characters) GetData(urlString string) error {
 }
 
 func getData(c Characters, queryMap map[string]string, resultType *characters.MainType) (*characters.MainType, error) {
-	resp := client.Call(c.CommonStruct, queryMap, resultType, "characters")
+	resp := c.Call(queryMap, resultType, "characters")
 
 	if resp == nil {
 		return nil, errors.New("Error getting data")
@@ -84,6 +84,6 @@ func New(apikey string) contract.InformationCaller[characters.CharactersArray, c
 		},
 		arr: []characters.MainType{},
 	}
-	c.Client = client.New(apikey)
+	c.HttpClient = client.New(apikey)
 	return c
 }
