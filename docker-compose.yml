@@ -8,6 +8,8 @@ services:
       - "27017:27017"
     networks:
       - comic-network
+    volumes:
+      - ./mongodb_data:/data/db  # Optional: Mount a local volume for persistent data
 
   rabbitmq:
     image: rabbitmq:3.11-management-alpine

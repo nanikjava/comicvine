@@ -2,8 +2,8 @@ package http
 
 import (
 	"fmt"
+	"github.com/nanikjava/comicstype/json/common"
 	"log"
-	"project/github/comics/client/json/common"
 )
 
 func Call(c common.CommonStruct, queryMap map[string]string, resultType interface{}, urlPath string) interface{} {

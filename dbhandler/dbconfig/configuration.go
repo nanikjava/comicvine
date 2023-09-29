@@ -1,4 +1,4 @@
-package configuration
+package dbconfig
 
 import (
 	"fmt"
@@ -8,7 +8,6 @@ import (
 
 type ComicAppConfig struct {
 	DbURL  string `config:"dburl"`
-	Token  string `config:"token"`
 	DBName string `config:"dbname"`
 }
 

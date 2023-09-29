@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"project/github/comics/client/configuration"
+	"project/github/comics/dbhandler/dbconfig"
 	"sync"
 	"time"
 )
@@ -78,7 +78,7 @@ func (m *Mongo) getClient() *mongo.Client {
 	return m.client
 }
 
-func Init(c configuration.ComicAppConfig) (*Mongo, error) {
+func Init(c dbconfig.ComicAppConfig) (*Mongo, error) {
 	m := &Mongo{
 		lock:       sync.RWMutex{},
 		enabled:    false,

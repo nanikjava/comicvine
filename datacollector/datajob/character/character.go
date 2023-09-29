@@ -2,11 +2,11 @@ package character
 
 import (
 	"errors"
+	"github.com/nanikjava/comicstype/contract"
+	"github.com/nanikjava/comicstype/json/character"
+	"github.com/nanikjava/comicstype/json/common"
 	"project/github/comics/client"
 	"project/github/comics/client/async"
-	"project/github/comics/client/contract"
-	"project/github/comics/client/json/character"
-	"project/github/comics/client/json/common"
 	http "project/github/comics/client/sync"
 	"strconv"
 )

@@ -3,11 +3,11 @@ package characters
 import (
 	"errors"
 	"fmt"
+	"github.com/nanikjava/comicstype/contract"
+	"github.com/nanikjava/comicstype/json/characters"
+	"github.com/nanikjava/comicstype/json/common"
 	"project/github/comics/client"
 	"project/github/comics/client/async"
-	"project/github/comics/client/contract"
-	characters "project/github/comics/client/json/characters"
-	"project/github/comics/client/json/common"
 	http "project/github/comics/client/sync"
 
 	"strconv"
